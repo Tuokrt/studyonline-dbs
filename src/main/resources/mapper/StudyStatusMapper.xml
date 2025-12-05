@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wyu.studyonline.mapper.StudyStatusMapper">
+
+<!--    public int addStudyStatus(StudyStatus studyStatus);-->
+    <insert id="addStudyStatus" useGeneratedKeys="true" keyProperty="id">
+        insert into study_status(userId,content,firstPhoto,secondPhoto,thirdPhoto) values (${userId},#{content},#{firstPhoto},#{secondPhoto},#{thirdPhoto});
+    </insert>
+
+<!--    //查找所有动态-->
+<!--    public List<StudyStatus> selectAllStudyStatus(@Param("begin") String begin,@Param("limit") String limit);-->
+    <select id="selectAllStudyStatus" resultType="StudyStatus">
+        SELECT `study_status`.*,userName,userAvatar FROM `study_status`,`user` where `study_status`.userId = `user`.id  ORDER BY createTime DESC limit ${begin},${limit};
+    </select>
+
+<!--    //查所有动态的页数-->
+<!--    public int studyStatusPages();-->
+    <select id="studyStatusPages" resultType="int">
+        select ceil(count(*)/${limit}) from study_status;
+    </select>
+
+<!--    //根据动态id增加一个点赞-->
+<!--    public int addStudyStatusLike(@Param("studyStatusId") int studyStatusId);-->
+    <update id="addStudyStatusLike">
+        update study_status set likeCount = likeCount + 1 where id = ${studyStatusId};
+    </update>
+
+<!--    //根据动态id减少一个点赞-->
+<!--    public int subStudyStatusLike(@Param("studyStatusId") int studyStatusId);-->
+    <update id="subStudyStatusLike">
+        update study_status set likeCount = likeCount - 1 where id = ${studyStatusId};
+    </update>
+
+<!--    //添加一条点赞记录-->
+<!--    public int addLikeRecord(@Param("userId") int userId, @Param("studyStatusId") int studyStatusId);-->
+    <insert id="addLikeRecord">
+        insert like_record(userId,studyStatusId) values (${userId},${studyStatusId});
+    </insert>
+
+<!--    //根据userId与studyStatusId删除一条点赞记录-->
+<!--    public int deleteLikeRecord(@Param("userId") int userId, @Param("studyStatusId") int studyStatusId);-->
+    <delete id="deleteLikeRecord">
+        delete from like_record where userId = ${userId} and studyStatusId = ${studyStatusId};
+    </delete>
+
+<!--    //根据userId查找该用户所有点赞的动态-->
+<!--    public List<Integer> selectAllLikeRecordByUserId(@Param("userId") int userId);-->
+    <select id="selectAllLikeRecordByUserId" resultType="int">
+        select studyStatusId from like_record where userId = ${userId};
+    </select>
+
+<!--    //根据studyStatusId查找一条动态-->
+<!--    public StudyStatus selectStudyStatusById(@Param("studyStatusId") int studyStatusId);-->
+    <select id="selectStudyStatusById" resultType="StudyStatus">
+        SELECT `study_status`.*,userName,userAvatar FROM `study_status`,`user` where `study_status`.userId = `user`.id  and `study_status`.id = ${studyStatusId};
+    </select>
+
+<!--    //根据id查找该动态的所有评论-->
+<!--    public List<Comment> selectAllCommentByStatusId(@Param("begin") String begin, @Param("limit") String limit, @Param("studyStatusId") int studyStatusId);-->
+    <select id="selectAllCommentByStatusId" resultType="Comment">
+        SELECT `comment_record`.*,userName,userAvatar FROM `comment_record`,`user` where `comment_record`.userId = `user`.id and `comment_record`.studyStatusId = ${studyStatusId} ORDER BY createTime DESC limit ${begin},${limit};
+    </select>
+
+<!--    //根据id查找所有评论的页数-->
+<!--    public int commentPagesByStatusId(@Param("limit") String limit, @Param("studyStatusId") int studyStatusId);-->
+    <select id="commentPagesByStatusId" resultType="int">
+        select ceil(count(*)/${limit}) from (select * from comment_record where studyStatusId = ${studyStatusId}) as user_comment;
+    </select>
+
+<!--    //添加一条评论-->
+<!--    public int addComment(@Param("userId") int userId, @Param("studyStatusId") int studyStatusId, @Param("content") String content);-->
+<!--    <insert id="addComment">-->
+<!--        insert comment_record(userId,studyStatusId,commentContent) values (${userId},${studyStatusId},#{content});-->
+<!--    </insert>-->
+
+<!--    //添加一条评论-->
+<!--    public int addComment(Comment comment);-->
+    <insert id="addComment" parameterType="Comment" useGeneratedKeys="true" keyProperty="id">
+    insert into comment_record(userId, studyStatusId, commentContent) values (#{userId}, #{studyStatusId}, #{commentContent})
+    </insert>
+
+<!--    //根据动态id增加一个评论-->
+<!--    public int addCommentCount(@Param("studyStatusId") int studyStatusId);-->
+    <update id="addCommentCount">
+        update study_status set commentCount = commentCount + 1 where id = ${studyStatusId};
+    </update>
+
+<!--    //根据评论id删除一个评论-->
+<!--    public int deleteCommentById(@Param("id") int id);-->
+    <delete id="deleteCommentById">
+        delete from comment_record where id = ${id};
+    </delete>
+
+    <!--    //根据动态id减少一个评论-->
+    <!--    public int subCommentCount(@Param("studyStatusId") int studyStatusId);-->
+    <update id="subCommentCount">
+        update study_status set commentCount = commentCount - 1 where id = ${studyStatusId};
+    </update>
+
+<!--    //根据用户id查找该用户的所有动态-->
+<!--    public List<StudyStatus> selectMyStudyStatus(@Param("begin") String begin,@Param("limit") String limit,@Param("userId") int userId);-->
+    <select id="selectMyStudyStatus" resultType="StudyStatus">
+        SELECT `study_status`.*,userName,userAvatar FROM `study_status`,`user` where `study_status`.userId = `user`.id AND `study_status`.userId = ${userId}  ORDER BY createTime DESC limit ${begin},${limit};
+    </select>
+
+<!--    //根据用户id查找该用户的所有动态的页数-->
+<!--    public int selectMyStudyStatusPages(@Param("limit") String limit, @Param("userId") int userId);-->
+    <select id="selectMyStudyStatusPages" resultType="int">
+        select ceil(count(*)/${limit}) from (select * from study_status where userId = ${userId}) as my_studyStatus;
+    </select>
+
+<!--    //根据动态id增加一个转发-->
+<!--    public int addTransmitCount(@Param("studyStatusId") int studyStatusId);-->
+    <update id="addTransmitCount">
+        update study_status set transmitCount = transmitCount + 1 where id = ${studyStatusId};
+    </update>
+
+<!--    //根据动态id删除一条动态-->
+<!--    public int deleteStudyStatus(@Param("studyStatusId") int studyStatusId);-->
+    <delete id="deleteStudyStatus">
+        delete from like_record where studyStatusId = ${studyStatusId};
+        delete from comment_record where studyStatusId = ${studyStatusId};
+        delete from study_status where id = ${studyStatusId};
+    </delete>
+
+<!--    //添加一条举报-->
+<!--    public int addReport(Report report);-->
+    <insert id="addReport">
+        insert into report(userId,reportType,beReportedId,reportContent,photo) values (${userId},#{reportType},#{beReportedId},#{reportContent},#{photo});
+    </insert>
+</mapper>

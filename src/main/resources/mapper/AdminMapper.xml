@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wyu.studyonline.mapper.AdminMapper">
+
+<!--    //根据手机号查找管理员-->
+<!--    public Admin selectAdminByCellPhone(@Param("cellPhone") String cellPhone);-->
+    <select id="selectAdminByCellPhone" resultType="Admin">
+        select * from admin where cellPhone = #{cellPhone};
+    </select>
+
+<!--    //根据性别查找用户的个数-->
+<!--    public int selectUserCountByGender(@Param("gender") int gender);-->
+    <select id="selectUserCountByGender" resultType="int">
+        select count(*) from user where gender = ${gender};
+    </select>
+
+<!--    //根据自习室状态查找自习室的个数-->
+<!--    public int selectStudyRoomByStatus(@Param("status") int status);-->
+    <select id="selectStudyRoomByStatus" resultType="int">
+        select count(*) from study_room where openStatus = ${status};
+    </select>
+
+<!--    //增加一条公告-->
+<!--    public int addNotice(Notice notice);-->
+    <insert id="addNotice">
+        insert notice(adminId,title,content) values (${adminId},#{title},#{content});
+    </insert>
+
+<!--    //查找待审核的自习室-->
+<!--    public List<StudyRoom> selectAuditStudyRoom(@Param("begin") String begin, @Param("limit") String limit, @Param("status") int status);-->
+    <select id="selectAuditStudyRoom" resultType="StudyRoom">
+        select * from study_room where auditStatus = ${status} limit ${begin},${limit};
+    </select>
+
+<!--    //根据状态查找自习室个数-->
+<!--    public int selectStudyRoomCount(@Param("status") int status);-->
+    <select id="selectStudyRoomCount" resultType="int">
+        select count(*) from study_room where auditStatus = ${status};
+    </select>
+
+<!--    //根据id设置自习室审核通过-->
+<!--    public int setStudyRoomById(@Param("id") int id, @Param("auditStatus") int auditStatus);-->
+    <update id="setStudyRoomById">
+        update study_room set auditStatus = ${auditStatus} where id = ${id};
+    </update>
+
+<!--    //查找所有举报-->
+<!--    public List<Report> selectAllReport(@Param("begin") String begin, @Param("limit") String limit);-->
+    <select id="selectAllReport" resultType="Report">
+        select * from report limit ${begin},${limit};
+    </select>
+
+<!--    //查找举报条数-->
+<!--    public int selectAllReportCount();-->
+    <select id="selectAllReportCount" resultType="int">
+        select count(*) from report;
+    </select>
+
+<!--    //成功处理举报-->
+<!--    public int ideaReportById(@Param("id") int id);-->
+    <update id="ideaReportById">
+        update report set status = 1 where id = ${id};
+    </update>
+
+<!--    //查找最近用户-->
+<!--    public List<User> selectLatelyUser(@Param("begin") String begin, @Param("limit") String limit, @Param("latelyDay") int latelyDay);-->
+    <select id="selectLatelyUser" resultType="User">
+        SELECT * FROM user WHERE createTime >= DATE_SUB(NOW(), INTERVAL ${latelyDay} DAY) limit ${begin},${limit};
+    </select>
+
+<!--    //查找最近用户条数-->
+<!--    public int selectLatelyUserCount(@Param("latelyDay") int latelyDay);-->
+    <select id="selectLatelyUserCount" resultType="int">
+        select count(*) from user WHERE createTime >= DATE_SUB(NOW(), INTERVAL ${latelyDay} DAY);
+    </select>
+
+<!--    //根据id查找用户信息-->
+<!--    public List<User> selectUserById(@Param("begin") String begin, @Param("limit") String limit,@Param("id") int id);-->
+    <select id="selectUserById" resultType="User">
+        select * from user where id = ${id} limit ${begin},${limit};
+    </select>
+
+<!--    //根据天数与id封禁用户-->
+<!--    public int banUserByDay(@Param("id") int id, @Param("banDay") int banDay);-->
+    <update id="banUserByDay">
+        update user set status = 1 , banDay = ${banDay} where id = ${id};
+    </update>
+
+<!--    //根据id解除封禁-->
+<!--    public int notBanUserById(@Param("id") int id);-->
+    <update id="notBanUserById">
+        update user set status = 0 , banDay = 0 where id = ${id};
+    </update>
+
+<!--    //根据id查找自习室-->
+<!--    public List<User> selectStudyRoomById(@Param("begin") String begin, @Param("limit") String limit,@Param("id") int id);-->
+    <select id="selectStudyRoomById" resultType="StudyRoom">
+        select * from study_room where id = ${id} limit ${begin},${limit};
+    </select>
+
+<!--    //根据id封禁自习室-->
+<!--    public int banStudyRoomById(@Param("id") int id);-->
+    <update id="banStudyRoomById">
+        update study_room set auditStatus = 3 , openStatus = 0 where id = ${id};
+    </update>
+
+<!--    //根据id解封自习室-->
+<!--    public int notBanStudyRoomById(@Param("id") int id);-->
+    <update id="notBanStudyRoomById">
+        update study_room set auditStatus = 1 , openStatus = 0 where id = ${id};
+    </update>
+
+<!--    //根据id查找动态-->
+<!--    public List<StudyStatus> selectStudyStatusById(@Param("begin") String begin, @Param("limit") String limit,@Param("id") int id);-->
+    <select id="selectStudyStatusById" resultType="StudyStatus">
+        select * from study_status where id = ${id} limit ${begin},${limit};
+    </select>
+
+<!--    //根据id查找评论-->
+<!--    public List<Comment> selectCommentById(@Param("begin") String begin, @Param("limit") String limit,@Param("id") int id);-->
+    <select id="selectCommentById" resultType="Comment">
+        select * from comment_record where id = ${id} limit ${begin},${limit};
+    </select>
+</mapper>

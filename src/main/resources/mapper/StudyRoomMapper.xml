@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wyu.studyonline.mapper.StudyRoomMapper">
+
+<!--    //根据用户id增加学习时间-->
+<!--    public int addStudyTimeByid(@Param("addStudyTime") int addStudyTime, @Param("userId") int userId);-->
+    <update id="addStudyTimeByid">
+        update user set studyTime = studyTime + ${addStudyTime} where id = ${userId};
+    </update>
+
+<!--    //根据用户id查找用户创建的自习室-->
+<!--    public StudyRoom selectStudyRoomByUserId(@Param("userId") int userId);-->
+    <select id="selectStudyRoomByUserId" resultType="StudyRoom">
+        select * from study_room where userId = ${userId};
+    </select>
+
+<!--    //查询所有自习室分类-->
+<!--    public List<Category> selectAllCategory();-->
+    <select id="selectAllCategory" resultType="Category">
+        select * from category;
+    </select>
+
+<!--    //创建自习室-->
+<!--    public int insertStudyRoom(StudyRoom studyRoom);-->
+    <insert id="insertStudyRoom">
+        insert into study_room(categoryId,userId,roomName,roomDescride,roomCover,userCard) values (${categoryId},${userId},#{roomName},#{roomDescride},#{roomCover},#{userCard});
+    </insert>
+
+<!--    //根据用户id更新自习室信息-->
+<!--    public int updateStudyRoomByUserId(StudyRoom studyRoom);-->
+    <update id="updateStudyRoomByUserId">
+        update study_room set categoryId = ${categoryId},roomName = #{roomName},roomDescride = #{roomDescride},roomCover = #{roomCover},openStatus = 1 where userId = ${userId};
+    </update>
+
+<!--    //查找所有开启的自习室-->
+<!--    public List<StudyRoom> selectAllOpenStudyRoom();-->
+    <select id="selectAllOpenStudyRoom" resultType="StudyRoom">
+        select * from study_room where openStatus = 1;
+    </select>
+
+<!--    //根据用户id设置自习室状态为关闭-->
+<!--    public int closeStudyRoomByUserId(@Param("userId") int userId);-->
+    <update id="closeStudyRoomByUserId">
+        update study_room set openStatus = 0 where userId = ${userId};
+    </update>
+
+<!--    //根据自习室id查找自习室信息-->
+<!--    public StudyRoom selectStudyRoomByRoomId(@Param("roomId") int roomId);-->
+    <select id="selectStudyRoomByRoomId" resultType="StudyRoom">
+        select * from study_room where id = ${roomId};
+    </select>
+</mapper>

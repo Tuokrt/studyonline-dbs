@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wyu.studyonline.mapper.UserMapper">
+<!--    public int insertUser(User user);-->
+    <insert id="insertUser" useGeneratedKeys="true" keyProperty="id">
+        insert into user(userName,cellPhone,userAvatar) values (#{userName},#{cellPhone},#{userAvatar});
+    </insert>
+
+<!--    //查询用户是否存在-->
+<!--    public User selectUserByCellPhone(String cellPhone);-->
+    <select id="selectUserByCellPhone" resultType="User">
+        select * from user where cellPhone = #{cellPhone};
+    </select>
+
+<!--    //添加学习待办-->
+<!--    public int insertStudyPlan(@Param("userId") int userId, @Param("content") String content);-->
+    <insert id="insertStudyPlan">
+        insert into study_plan(userId,content) value (#{userId},#{content});
+    </insert>
+
+<!--    //根据用户id查找所有学习待办-->
+<!--    public List<StudyPlan> selectAllStudyPlanByUserId(@Param("page") String page, @Param("begin") String begin, @Param("userId") int userId)-->
+    <select id="selectAllStudyPlanByUserId" resultType="StudyPlan">
+        select * from study_plan where userId = #{userId} limit ${begin},${limit};
+    </select>
+
+<!--    //根据用户id查找所有学习待办总记录数-->
+<!--    public int selectAllStudyPlanByUserIdCount(@Param("userId") int userId);-->
+    <select id="selectAllStudyPlanByUserIdCount" resultType="int">
+        select count(*) from study_plan where userId = #{userId};
+    </select>
+
+<!--    //根据学习待办id修改content-->
+<!--    public int updateStudyPlanContent(@Param("id") int id, @Param("updateContent") String updateContent);-->
+    <update id="updateStudyPlanContent">
+        update study_plan set content = #{updateContent} where id = #{id};
+    </update>
+
+<!--    //根据学习待办id删除对应记录-->
+<!--    public int deleteStudyPlanContent(@Param("id") int id);-->
+    <delete id="deleteStudyPlanContent">
+        delete from study_plan where id = #{id};
+    </delete>
+
+<!--    //添加备考日历-->
+<!--    public int insertExamTime(@Param("examName") String examName, @Param("examTime") String examTime, @Param("userId") int userId);-->
+    <insert id="insertExamTime">
+        insert into exam_time(userId,examName,examTime) value (#{userId},#{examName},#{examTime});
+    </insert>
+
+    <!--    //根据用户id查找所有学习时间-->
+    <!--    public List<StudyPlan> selectAllExamTimeByUserId(@Param("page") String page, @Param("begin") String begin, @Param("userId") int userId)-->
+    <select id="selectAllExamTimeByUserId" resultType="ExamTime">
+        select * from exam_time where userId = #{userId} limit ${begin},${limit};
+    </select>
+
+    <!--    //根据用户id查找所有学习时间总记录数-->
+    <!--    public int selectAllExamTimeByUserIdCount(@Param("userId") int userId);-->
+    <select id="selectAllExamTimeByUserIdCount" resultType="int">
+        select count(*) from exam_time where userId = #{userId};
+    </select>
+
+<!--    //根据考试计划的id更新考试信息-->
+<!--    public int updateExamTimeById(@Param("id") int id, @Param("examName") String examName, @Param("examTime") String examTime);-->
+    <update id="updateExamTimeById">
+        update exam_time set examName = #{examName},examTime = #{examTime} where id = #{id};
+    </update>
+
+<!--    //根据考试考试计划的id删除考试信息-->
+<!--    public int deleteExamTimeById(@Param("id") int id);-->
+    <delete id="deleteExamTimeById">
+        delete from exam_time where id = #{id};
+    </delete>
+
+<!--    //根据用户id查找对应的打卡信息-->
+<!--    public EverydayStatus selectEverydayStatusById(@Param("int userId") int userId);-->
+    <select id="selectEverydayStatusById" resultType="EverydayStatus">
+        select * from everyday_status where userId = #{userId};
+    </select>
+
+<!--    //插入用户id插入打卡信息-->
+<!--    public int insertEverydayStatusById(@Param("userId") int userId);-->
+    <insert id="insertEverydayStatusById">
+        insert into everyday_status(userId) value(#{userId});
+    </insert>
+
+<!--    //根据用户id更新打卡信息-->
+<!--    public int updateEverydayStatus(@Param("userId") int userId);-->
+    <update id="updateEverydayStatus">
+        update everyday_status set totalDay = totalDay + 1,todayStatus = 1 where userId = #{userId};
+    </update>
+
+<!--    //每天0点将已打卡用户的打卡状态置0-->
+<!--    public int resetEverydayStatus();-->
+    <update id="resetEverydayStatus">
+        update everyday_status set todayStatus = 0 where todayStatus = 1;
+    </update>
+
+<!--    //根据用户id更新图片地址-->
+<!--    public int updateUserAvatarById(@Param("imgPath") String imgPath,@Param("userId") int userId);-->
+    <update id="updateUserAvatarById">
+        update user set userAvatar = #{imgPath} where id = ${userId};
+    </update>
+
+<!--    //根据用户id更新用户信息-->
+<!--    public int updateUserById(@Param("userId") int userId, @Param("userName") String userName, @Param("gender") int gender);-->
+    <update id="updateUserById">
+        update user set userName = #{userName},gender = ${gender} where id =${userId};
+    </update>
+
+<!--    //根据用户id修改密码-->
+<!--    public int updateUserPasswordById(@Param("userPassword") String userPassword, @Param("userId") int userId);-->
+    <update id="updateUserPasswordById">
+        update user set userPassword = #{userPassword} where id = ${userId};
+    </update>
+
+<!--    //根据用户id修改手机号-->
+<!--    public int updateCellPhoneById(@Param("cellPhone") String cellPhone,@Param("userId") int userId);-->
+    <update id="updateCellPhoneById">
+        update user set cellPhone = #{cellPhone} where id = ${userId};
+    </update>
+
+<!--    //根据用户id增加经验值-->
+<!--    public int updateUserExpById(@Param("addExp") int addExp,@Param("userId") int userId);-->
+    <update id="updateUserExpById">
+        update user set exp = exp + ${addExp} where id = ${userId};
+    </update>
+
+<!--    //根据用户id提高用户一个等级-->
+<!--    public int updateUserRankById(@Param("userId") int userId);-->
+    <update id="updateUserRankById">
+        update user set rank = rank + 1 where id = ${userId};
+    </update>
+
+<!--    //根据用户id查找其等级-->
+<!--    public int selectRankByUserId(@Param("userId") int userId);-->
+    <select id="selectRankByUserId" resultType="int">
+        select rank from user where id = ${userId};
+    </select>
+
+<!--    //每天0点将封禁天数减1-->
+<!--    public int subBanDay();-->
+    <update id="subBanDay">
+        update user set banDay = banDay -1 where status = 1;
+    </update>
+
+<!--    //查找没完成的待办-->
+<!--    public List<StudyPlan> selectUnfinishedStudyPlan(@Param("userId") int userId);-->
+    <select id="selectUnfinishedStudyPlan" resultType="StudyPlan">
+        select * from study_plan where status = 0 and userId = ${userId};
+    </select>
+
+<!--    //查找当前时间之后的考试-->
+<!--    public List<ExamTime> selectLateExamTime(@Param("userId") int userId);-->
+    <select id="selectLateExamTime" resultType="ExamTime">
+        select * from exam_time where examTime >= CURDATE() and userId = ${userId} order by examTime ASC;
+    </select>
+
+<!--    //查找最新公告-->
+<!--    public Notice selectNewNotice();-->
+    <select id="selectNewNotice" resultType="Notice">
+        SELECT * FROM notice ORDER BY createTime DESC LIMIT 1;
+    </select>
+
+<!--    //查找学习排行榜-->
+<!--    public List<User> selectStudyTimeList();-->
+    <select id="selectStudyTimeList" resultType="User">
+        SELECT * FROM user ORDER BY studyTime DESC LIMIT 10;
+    </select>
+
+<!--    //根据id更改待办状态-->
+<!--    public int updateStudyPlanStatus(@Param("id") int id);-->
+    <update id="updateStudyPlanStatus">
+        update study_plan set status = 1 where id = ${id};
+    </update>
+</mapper>
