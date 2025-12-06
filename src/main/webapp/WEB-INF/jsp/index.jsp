@@ -17,7 +17,7 @@
 <body>
 <div class="layui-layout layui-layout-admin">
     <div class="layui-header">
-        <span class="layui-logo layui-hide-xs" style="font-size: 20px; font-family:楷体 ">线上自习室</span>
+        <span class="layui-logo layui-hide-xs" style="font-size: 20px; font-family:楷体 ">在线自习室</span>
         <!-- 头部区域（可配合layui 已有的水平导航） -->
         <ul class="layui-nav layui-layout-left">
 
