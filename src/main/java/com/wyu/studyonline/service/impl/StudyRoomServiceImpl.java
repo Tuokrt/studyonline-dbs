@@ -24,7 +24,7 @@ public class StudyRoomServiceImpl implements StudyRoomService {
     }
 
     @Override
-    @Cacheable(key = "'selectStudyRoomByUserId:' + #userId")
+    @Cacheable(key = "'selectStudyRoomByUserId:' + #userId",unless = "#result == null")
     public StudyRoom selectStudyRoomByUserId(int userId) {
         return studyRoomMapper.selectStudyRoomByUserId(userId);
     }

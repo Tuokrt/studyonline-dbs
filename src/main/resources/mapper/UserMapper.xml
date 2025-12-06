@@ -131,13 +131,13 @@
 <!--    //根据用户id提高用户一个等级-->
 <!--    public int updateUserRankById(@Param("userId") int userId);-->
     <update id="updateUserRankById">
-        update user set rank = rank + 1 where id = ${userId};
+        update user set `rank` = `rank` + 1 where id = ${userId};
     </update>
 
 <!--    //根据用户id查找其等级-->
 <!--    public int selectRankByUserId(@Param("userId") int userId);-->
     <select id="selectRankByUserId" resultType="int">
-        select rank from user where id = ${userId};
+        select `rank` from user where id = ${userId};
     </select>
 
 <!--    //每天0点将封禁天数减1-->
