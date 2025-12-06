@@ -317,11 +317,12 @@ public class UserController {
             User user = (User) session.getAttribute("user");
             user.setExp(user.getExp() + 30);
             //如果用户经验达到临界值则等级加1
+            while(user.getExp() >= user.getRank()*1000){
             if(user.getExp() >= user.getRank()*1000){
                 if(userService.updateUserRankById(userId) != 0){
                     user.setRank(user.getRank() + 1);
                 }
-            }
+            }}
             session.setAttribute("user",user);
             return everydayStatus;
         }

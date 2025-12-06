@@ -71,11 +71,12 @@ public class StudyRoomController {
                 user.setStudyTime(user.getStudyTime() + studyTime);
                 user.setExp(user.getExp() + addExp);
                 //如果用户经验达到临界值则等级加1
+                while(user.getExp() >= user.getRank()*1000){
                 if(user.getExp() >= user.getRank()*1000){
                     if(userService.updateUserRankById(userId) != 0){
                         user.setRank(user.getRank() + 1);
                     }
-                }
+                }}
                 session.setAttribute("user", user);
                 return "success";
             }
