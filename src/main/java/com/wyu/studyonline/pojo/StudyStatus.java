@@ -48,22 +48,22 @@ public class StudyStatus {
     /**
      *转发次数
      */
-    private int transmitCount;
+    private int transmitCount = 0;
     /**
      *评论条数
      */
-    private int commentCount;
+    private int commentCount = 0;
     /**
      *点赞次数
      */
-    private int likeCount;
+    private int likeCount = 0;
     /**
      * 是否点赞
      */
-    private boolean isLike;
+    private boolean isLike = false;
     /**
      * 创建时间
      */
-    private Date createTime;
+    private Date createTime = new Date();
 
 }

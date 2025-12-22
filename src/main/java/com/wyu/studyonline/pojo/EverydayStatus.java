@@ -24,13 +24,13 @@ public class EverydayStatus {
     /**
      * 今天打卡状态（0未完成 1已完成）
      */
-     private int todayStatus;
+     private int todayStatus = 0;
     /**
      * 总打卡天数
      */
-    private int totalDay;
+    private int totalDay = 0;
     /**
      * 更新时间
      */
-     private Date updateTime;
+     private Date updateTime = new Date();
 }

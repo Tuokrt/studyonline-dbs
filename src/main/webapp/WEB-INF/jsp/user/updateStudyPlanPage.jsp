@@ -144,72 +144,40 @@
                     });
                     break;
                 case 'update':
-                    table.reload('test', {
-                        cols: [[
-                            {type: 'checkbox', fixed: 'left'}
-                            ,{field:'id', title:'ID', width:80, fixed: 'left', unresize: true, sort: true,}
-                            ,{field:'userId', title:'用户id', width:120,}
-                            ,{field:'content', title:'待办内容', width:370, edit:true}
-                            ,{field: 'status',
-                                title: '状态',
-                                width: 100,
-                                templet: function(d) {
-                                    if (d.status === 0) {
-                                        return '<span style="color:red;">未完成</span>';
-                                    } else if (d.status === 1) {
-                                        return '<span style="color:green;">已完成</span>';
-                                    } else {
-                                        return '';
-                                    }
-                                }}
-                            ,{field:'createTime', title:'创建时间', width:200, sort:true, templet: "<div>{{layui.util.toDateString(d.createTime, 'yyyy-MM-dd HH:mm:ss')}}</div>"
-                            }
-                            ,{fixed: 'right', title:'操作', toolbar: '#barDemo', width:100}
-                        ]]
-                    });
-
-
-
-                    // 监听单元格编辑事件
-                    table.on('edit(test)', function(obj){
-                        var field = obj.field; // 获取字段名
-                        var updateContent = obj.value; // 获取修改后的值
-                        var data = obj.data; // 获取当前行的数据
-                        confirm("确定修改吗？");
+                    var checkStatus = table.checkStatus(obj.config.id);
+                    var data = checkStatus.data;
+                    if (data.length === 0) {
+                        layer.msg('请先选择要修改的行');
+                        return;
+                    }
+                    if (data.length > 1) {
+                        layer.msg('只能选择一行进行修改');
+                        return;
+                    }
+                    
+                    var selectedRow = data[0];
+                    
+                    // 弹出修改对话框
+                    layer.prompt({
+                        formType: 2,
+                        value: selectedRow.content,
+                        title: '修改待办内容',
+                        area: ['500px', '150px']
+                    }, function(value, index, elem){
                         // 发送ajax请求，更新数据
                         $.ajax({
                             type: 'post',
                             url: '/user/updateStudyPlanContent',
                             data: {
-                                id: data.id,
-                                updateContent: updateContent
+                                id: selectedRow.id,
+                                updateContent: value
                             },
                             success: function(res){
                                 if(res == "success"){
                                     layer.msg('修改成功');
-                                    table.reload('test', {
-                                        cols: [[
-                                            {type: 'checkbox', fixed: 'left'}
-                                            ,{field:'id', title:'ID', width:80, fixed: 'left', unresize: true, sort: true,}
-                                            ,{field:'userId', title:'用户id', width:120,}
-                                            ,{field:'content', title:'待办内容', width:370,}
-                                            ,{field: 'status',
-                                                title: '状态',
-                                                width: 100,
-                                                templet: function(d) {
-                                                    if (d.status === 0) {
-                                                        return '<span style="color:red;">未完成</span>';
-                                                    } else if (d.status === 1) {
-                                                        return '<span style="color:green;">已完成</span>';
-                                                    } else {
-                                                        return '';
-                                                    }
-                                                }}
-                                            ,{field:'createTime', title:'创建时间', width:200, sort:true, templet: "<div>{{layui.util.toDateString(d.createTime, 'yyyy-MM-dd HH:mm:ss')}}</div>"
-                                            }
-                                            ,{fixed: 'right', title:'操作', toolbar: '#barDemo', width:100}
-                                        ]]
-                                    });
+                                    layer.close(index);
+                                    // 重新加载表格数据
+                                    table.reload('test');
                                 }else{
                                     layer.msg('修改失败');
                                 }

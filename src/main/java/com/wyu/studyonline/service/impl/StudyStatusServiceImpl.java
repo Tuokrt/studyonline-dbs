@@ -26,7 +26,7 @@ public class StudyStatusServiceImpl implements StudyStatusService {
     }
 
     @Override
-    @Cacheable(key = "'allStudyStatus' + #page")
+    @Cacheable(key = "'allStudyStatus' + #page", unless = "#result == null || #result.isEmpty()")
     public List<StudyStatus> selectAllStudyStatus(String page, String limit) {
         int pageInt = Integer.parseInt(page);
         int limitInt = Integer.parseInt(limit);
@@ -36,7 +36,7 @@ public class StudyStatusServiceImpl implements StudyStatusService {
     }
 
     @Override
-    @Cacheable(key = "'studyStatusPages' + #limit")
+    @Cacheable(key = "'studyStatusPages' + #limit", unless = "#result == null")
     public int studyStatusPages(String limit) {
         return studyStatusMapper.studyStatusPages(limit);
     }
@@ -64,13 +64,13 @@ public class StudyStatusServiceImpl implements StudyStatusService {
     }
 
     @Override
-    @Cacheable(key = "'allLikeRecord:' + #userId")
+    @Cacheable(key = "'allLikeRecord:' + #userId", unless = "#result == null || #result.isEmpty()")
     public List<Integer> selectAllLikeRecordByUserId(int userId) {
         return studyStatusMapper.selectAllLikeRecordByUserId(userId);
     }
 
     @Override
-    @Cacheable(key = "'studyStatusById:' + #studyStatusId")
+    @Cacheable(key = "'studyStatusById:' + #studyStatusId", unless = "#result == null")
     public StudyStatus selectStudyStatusById(int studyStatusId) {
         return studyStatusMapper.selectStudyStatusById(studyStatusId);
     }

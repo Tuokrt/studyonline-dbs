@@ -28,9 +28,9 @@ public class StudyPlan {
     /**
      * 审核状态（0未完成 1已完成）
      */
-    private int status;
+    private int status = 0;
     /**
      * 创建时间
      */
-    private Date createTime;
+    private Date createTime = new Date();
 }

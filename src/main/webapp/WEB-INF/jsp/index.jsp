@@ -218,7 +218,7 @@
 
     <div class="layui-footer">
         <!-- 底部固定区域 -->
-        <center>@五邑大学通信工程（计算机通信网络）190746班</center>
+        <center>@深圳大学</center>
     </div>
 </div>
 <%

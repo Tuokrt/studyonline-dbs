@@ -41,7 +41,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    @Cacheable(cacheNames = "StudyPlan", key = "'StudyPlanList:' + #userId + 'page:' + #page")
+    @Cacheable(cacheNames = "StudyPlan", key = "'StudyPlanList:' + #userId + 'page:' + #page", unless = "#result == null || #result.isEmpty()")
     public List<StudyPlan> selectAllStudyPlanByUserId(String page, String limit, int userId) {
         int pageInt = Integer.parseInt(page);
         int limitInt = Integer.parseInt(limit);
@@ -51,7 +51,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    @Cacheable(cacheNames = "StudyPlan", key = "'StudyPlanCount:' + #userId")
+    @Cacheable(cacheNames = "StudyPlan", key = "'StudyPlanCount:' + #userId", unless = "#result == null")
     public int selectAllStudyPlanByUserIdCount(int userId) {
         return userMapper.selectAllStudyPlanByUserIdCount(userId);
     }
@@ -74,7 +74,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    @Cacheable(cacheNames = "ExamTime", key = "'ExamTimeList:' + #userId + 'page:' +  #page")
+    @Cacheable(cacheNames = "ExamTime", key = "'ExamTimeList:' + #userId + 'page:' +  #page", unless = "#result == null || #result.isEmpty()")
     public List<ExamTime> selectAllExamTimeByUserId(String page, String limit, int userId) {
         int pageInt = Integer.parseInt(page);
         int limitInt = Integer.parseInt(limit);
@@ -84,7 +84,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    @Cacheable(cacheNames = "ExamTime", key = "'ExamTimeCount:' + #userId")
+    @Cacheable(cacheNames = "ExamTime", key = "'ExamTimeCount:' + #userId", unless = "#result == null")
     public int selectAllExamTimeByUserIdCount(int userId) {
         return userMapper.selectAllExamTimeByUserIdCount(userId);
     }
