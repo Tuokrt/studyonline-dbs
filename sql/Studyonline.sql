@@ -300,6 +300,32 @@ LOCK TABLES `study_status` WRITE;
 UNLOCK TABLES;
 
 --
+-- Table structure for table `like_record`
+--
+
+DROP TABLE IF EXISTS `like_record`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `like_record` (
+                             `id` int NOT NULL AUTO_INCREMENT,
+                             `userId` int NOT NULL,
+                             `studyStatusId` int NOT NULL,
+                             `createTime` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                             PRIMARY KEY (`id`),
+                             UNIQUE KEY `unique_like` (`userId`,`studyStatusId`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `like_record`
+--
+
+LOCK TABLES `like_record` WRITE;
+/*!40000 ALTER TABLE `like_record` DISABLE KEYS */;
+/*!40000 ALTER TABLE `like_record` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `user`
 --
 

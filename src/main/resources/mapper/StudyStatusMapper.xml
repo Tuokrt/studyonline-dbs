@@ -6,13 +6,14 @@
 
 <!--    public int addStudyStatus(StudyStatus studyStatus);-->
     <insert id="addStudyStatus" useGeneratedKeys="true" keyProperty="id">
-        insert into study_status(userId,content,firstPhoto,secondPhoto,thirdPhoto) values (${userId},#{content},#{firstPhoto},#{secondPhoto},#{thirdPhoto});
+        insert into study_status(userId,userName,userAvatar,content,firstPhoto,secondPhoto,thirdPhoto) 
+        values (#{userId},(select userName from user where id = #{userId}),(select userAvatar from user where id = #{userId}),#{content},#{firstPhoto},#{secondPhoto},#{thirdPhoto});
     </insert>
 
 <!--    //查找所有动态-->
 <!--    public List<StudyStatus> selectAllStudyStatus(@Param("begin") String begin,@Param("limit") String limit);-->
     <select id="selectAllStudyStatus" resultType="StudyStatus">
-        SELECT `study_status`.*,userName,userAvatar FROM `study_status`,`user` where `study_status`.userId = `user`.id  ORDER BY createTime DESC limit ${begin},${limit};
+        SELECT `study_status`.*,`user`.userName,`user`.userAvatar FROM `study_status`,`user` where `study_status`.userId = `user`.id  ORDER BY createTime DESC limit ${begin},${limit};
     </select>
 
 <!--    //查所有动态的页数-->
@@ -54,13 +55,13 @@
 <!--    //根据studyStatusId查找一条动态-->
 <!--    public StudyStatus selectStudyStatusById(@Param("studyStatusId") int studyStatusId);-->
     <select id="selectStudyStatusById" resultType="StudyStatus">
-        SELECT `study_status`.*,userName,userAvatar FROM `study_status`,`user` where `study_status`.userId = `user`.id  and `study_status`.id = ${studyStatusId};
+        SELECT `study_status`.*,`user`.userName,`user`.userAvatar FROM `study_status`,`user` where `study_status`.userId = `user`.id  and `study_status`.id = ${studyStatusId};
     </select>
 
 <!--    //根据id查找该动态的所有评论-->
 <!--    public List<Comment> selectAllCommentByStatusId(@Param("begin") String begin, @Param("limit") String limit, @Param("studyStatusId") int studyStatusId);-->
     <select id="selectAllCommentByStatusId" resultType="Comment">
-        SELECT `comment_record`.*,userName,userAvatar FROM `comment_record`,`user` where `comment_record`.userId = `user`.id and `comment_record`.studyStatusId = ${studyStatusId} ORDER BY createTime DESC limit ${begin},${limit};
+        SELECT `comment_record`.*,`user`.userName,`user`.userAvatar FROM `comment_record`,`user` where `comment_record`.userId = `user`.id and `comment_record`.studyStatusId = ${studyStatusId} ORDER BY createTime DESC limit ${begin},${limit};
     </select>
 
 <!--    //根据id查找所有评论的页数-->
@@ -102,7 +103,7 @@
 <!--    //根据用户id查找该用户的所有动态-->
 <!--    public List<StudyStatus> selectMyStudyStatus(@Param("begin") String begin,@Param("limit") String limit,@Param("userId") int userId);-->
     <select id="selectMyStudyStatus" resultType="StudyStatus">
-        SELECT `study_status`.*,userName,userAvatar FROM `study_status`,`user` where `study_status`.userId = `user`.id AND `study_status`.userId = ${userId}  ORDER BY createTime DESC limit ${begin},${limit};
+        SELECT `study_status`.*,`user`.userName,`user`.userAvatar FROM `study_status`,`user` where `study_status`.userId = `user`.id AND `study_status`.userId = ${userId}  ORDER BY createTime DESC limit ${begin},${limit};
     </select>
 
 <!--    //根据用户id查找该用户的所有动态的页数-->

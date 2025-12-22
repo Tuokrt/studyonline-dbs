@@ -5,6 +5,7 @@
   Time: 1:52
   To change this template use File | Settings | File Templates.
 --%>
+<%@ page import="com.wyu.studyonline.pojo.User" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
@@ -73,6 +74,15 @@
         </div>
     </div>
 </div>
+
+<%
+    User user = (User)session.getAttribute("user");
+    if(user == null){
+        response.sendRedirect(request.getContextPath() + "/loginPage");
+        return;
+    }
+%>
+
 <script>
     // 初始化图片上传组件
     layui.use(['upload', 'layer'], function() {
@@ -214,7 +224,7 @@
         $.ajax({
             url: '/user/addStudyStatus',
             type: 'POST',
-            data: {userId: ${user.id}, content: content, firstPhoto: firstPhoto, secondPhoto: secondPhoto, thirdPhoto: thirdPhoto},
+            data: {userId: <%=user.getId()%>, content: content, firstPhoto: firstPhoto, secondPhoto: secondPhoto, thirdPhoto: thirdPhoto},
             success: function(data) {
                 if (data == 'success') {
                     // var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
