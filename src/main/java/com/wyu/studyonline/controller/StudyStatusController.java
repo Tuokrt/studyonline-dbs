@@ -61,9 +61,12 @@ public class StudyStatusController {
             JSONObject o = JSONObject.parseObject(jsonArray.get(i).toString());
             System.out.println("动态id：" + o.getString("value") + ", 热度值：" + o.getLongValue("score"));
             StudyStatus studyStatus = studyStatusService.selectStudyStatusById(Integer.parseInt(o.getString("value")));
-            Map<Integer,String> resMap = new HashMap<>();
-            resMap.put(studyStatus.getId(),studyStatus.getContent());
-            studyStatusRankList.add(resMap);
+            // 检查动态是否存在，如果已被删除则跳过
+            if (studyStatus != null) {
+                Map<Integer,String> resMap = new HashMap<>();
+                resMap.put(studyStatus.getId(),studyStatus.getContent());
+                studyStatusRankList.add(resMap);
+            }
         }
         model.addAttribute("studyStatusRankList", studyStatusRankList);
         return "user/allStudyStatusPage";
