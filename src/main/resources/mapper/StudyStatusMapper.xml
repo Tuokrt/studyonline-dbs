@@ -6,8 +6,8 @@
 
 <!--    public int addStudyStatus(StudyStatus studyStatus);-->
     <insert id="addStudyStatus" useGeneratedKeys="true" keyProperty="id">
-        insert into study_status(userId,userName,userAvatar,content,firstPhoto,secondPhoto,thirdPhoto) 
-        values (#{userId},(select userName from user where id = #{userId}),(select userAvatar from user where id = #{userId}),#{content},#{firstPhoto},#{secondPhoto},#{thirdPhoto});
+        insert into study_status(userId,userName,userAvatar,content,firstPhoto,secondPhoto,thirdPhoto,createTime) 
+        values (#{userId},(select userName from user where id = #{userId}),(select userAvatar from user where id = #{userId}),#{content},#{firstPhoto},#{secondPhoto},#{thirdPhoto},#{createTime});
     </insert>
 
 <!--    //查找所有动态-->
@@ -122,7 +122,7 @@
 <!--    public int deleteStudyStatus(@Param("studyStatusId") int studyStatusId);-->
     <delete id="deleteStudyStatus">
         delete from like_record where studyStatusId = ${studyStatusId};
-        delete from comment_record where studyStatusId = ${studyStatusId};
+        delete from comment where studyStatusId = ${studyStatusId};
         delete from study_status where id = ${studyStatusId};
     </delete>
 
