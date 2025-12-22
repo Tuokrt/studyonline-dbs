@@ -243,12 +243,12 @@
     </div>
     <div style="display: inline-block; position: absolute">
         <p class="total-day">
-            累计打卡：<i style="color: #1E9FFF;font-size: 15px" id="totalDay"><%=everydayStatus.getTotalDay()%>天</i>
+            累计打卡：<i style="color: #1E9FFF;font-size: 15px" id="totalDay"><%=everydayStatus != null ? everydayStatus.getTotalDay() : 0%>天</i>
         </p>
         <p class="last-day">
             上次打卡：<i style="color: #1E9FFF;font-size: 15px" id="lastDay"><!-- 判断日期是否有效 -->
             <c:choose>
-            <c:when test="${everydayStatus.totalDay == 0}">
+            <c:when test="${everydayStatus == null || everydayStatus.totalDay == 0}">
             你没有打卡记录
             </c:when>
             <c:otherwise>
@@ -278,7 +278,7 @@
 </div>
 
 <%
-    if(everydayStatus.getTodayStatus() ==1){
+    if(everydayStatus != null && everydayStatus.getTodayStatus() ==1){
 
 
 %>
@@ -314,15 +314,28 @@
             data: {
                 userId: <%=user.getId()%>,
             },
-            success: function (everydayStatus) {
-                if (everydayStatus != null) {
-                    console.log(everydayStatus);
+            success: function (data) {
+                if (data != null) {
+                    console.log(data);
                     $('.box').removeClass('layui-anim-scale layui-anim-loop');
                     $('.circle-button').addClass('success');
                     $('.circle-button').text("已打卡");
-                    $("#totalDay").text(everydayStatus.totalDay + "天");
-                    var formattedTime = formatDate(everydayStatus.updateTime);
-                    $("#lastDay").text(formattedTime);
+                    
+                    // 确保数据是对象格式
+                    var everydayStatus = typeof data === 'string' ? JSON.parse(data) : data;
+                    
+                    // 安全地设置累计打卡天数
+                    var totalDay = everydayStatus.totalDay || everydayStatus.totalday || 0;
+                    $("#totalDay").text(totalDay + "天");
+                    
+                    // 安全地设置上次打卡时间
+                    var updateTime = everydayStatus.updateTime || everydayStatus.updatetime;
+                    if (updateTime) {
+                        var formattedTime = formatDate(updateTime);
+                        $("#lastDay").text(formattedTime);
+                    } else {
+                        $("#lastDay").text("你没有打卡记录");
+                    }
                 } else {
                     layer.msg('打卡失败，请重试！');
                 }

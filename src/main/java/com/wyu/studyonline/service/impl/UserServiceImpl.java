@@ -102,7 +102,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    @Cacheable(key = "'EverydayStatus:' + #userId")
+    @Cacheable(key = "'EverydayStatus:' + #userId", unless = "#result == null")
     public EverydayStatus selectEverydayStatusById(int userId) {
         return userMapper.selectEverydayStatusById(userId);
     }

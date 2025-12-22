@@ -121,7 +121,7 @@ public class StudyStatusServiceImpl implements StudyStatusService {
     }
 
     @Override
-    @Cacheable(key = "'myStudyStatus:' + #userId + 'page:' + #page")
+    @Cacheable(key = "'myStudyStatus:' + #userId + 'page:' + #page", unless = "#result == null || #result.isEmpty()")
     public List<StudyStatus> selectMyStudyStatus(String page, String limit, int userId) {
         int pageInt = Integer.parseInt(page);
         int limitInt = Integer.parseInt(limit);
@@ -131,7 +131,7 @@ public class StudyStatusServiceImpl implements StudyStatusService {
     }
 
     @Override
-    @Cacheable(key = "'myStudyStatusPages:' + #userId + 'limit:' + #limit")
+    @Cacheable(key = "'myStudyStatusPages:' + #userId + 'limit:' + #limit", unless = "#result == null")
     public int selectMyStudyStatusPages(String limit, int userId) {
         return studyStatusMapper.selectMyStudyStatusPages(limit, userId);
     }

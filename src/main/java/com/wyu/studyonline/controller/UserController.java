@@ -305,28 +305,47 @@ public class UserController {
     @ResponseBody
     @RequestMapping("/updateEverydayStatus")
     public EverydayStatus updateEverydayStatus(@RequestParam int userId, HttpSession session){
-        if(userService.updateEverydayStatus(userId) != 0){
-            //查找用户对应的每日打卡
-            EverydayStatus everydayStatus = userService.selectEverydayStatusById(userId);
-            System.out.println("打卡后：" + everydayStatus);
-            //用户对应的每日打卡放入session层
-            session.setAttribute("everydayStatus",everydayStatus);
-            //根据用户id增加打卡对应的经验值（打卡得30经验值）
-            userService.updateUserExpById(30,userId);
-            //更新session层的用户信息
-            User user = (User) session.getAttribute("user");
-            user.setExp(user.getExp() + 30);
-            //如果用户经验达到临界值则等级加1
-            while(user.getExp() >= user.getRank()*1000){
-            if(user.getExp() >= user.getRank()*1000){
-                if(userService.updateUserRankById(userId) != 0){
-                    user.setRank(user.getRank() + 1);
-                }
-            }}
-            session.setAttribute("user",user);
-            return everydayStatus;
+        try {
+            // 先检查用户是否有打卡记录
+            EverydayStatus existingStatus = userService.selectEverydayStatusById(userId);
+            
+            // 如果用户没有打卡记录，先插入新记录
+            if(existingStatus == null){
+                userService.insertEverydayStatusById(userId);
+            }
+            
+            // 更新打卡状态
+            if(userService.updateEverydayStatus(userId) != 0){
+                //查找用户对应的每日打卡
+                EverydayStatus everydayStatus = userService.selectEverydayStatusById(userId);
+                System.out.println("打卡后：" + everydayStatus);
+                //用户对应的每日打卡放入session层
+                session.setAttribute("everydayStatus",everydayStatus);
+                //根据用户id增加打卡对应的经验值（打卡得30经验值）
+                userService.updateUserExpById(30,userId);
+                //更新session层的用户信息
+                User user = (User) session.getAttribute("user");
+                user.setExp(user.getExp() + 30);
+                //如果用户经验达到临界值则等级加1
+                while(user.getExp() >= user.getRank()*1000){
+                if(user.getExp() >= user.getRank()*1000){
+                    if(userService.updateUserRankById(userId) != 0){
+                        user.setRank(user.getRank() + 1);
+                    }
+                }}
+                session.setAttribute("user",user);
+                return everydayStatus;
+            }
+            
+            // 如果执行到这里，说明打卡失败
+            System.out.println("打卡失败，用户ID：" + userId);
+            return null;
+        } catch (Exception e) {
+            // 捕获异常，避免返回500错误
+            System.out.println("打卡异常：" + e.getMessage());
+            e.printStackTrace();
+            return null;
         }
-        return null;
     }
 
     @RequestMapping("/updateInformationPage")
