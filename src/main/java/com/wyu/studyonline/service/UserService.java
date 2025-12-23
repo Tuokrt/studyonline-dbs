@@ -92,4 +92,15 @@ public interface UserService {
 
     //根据id更改待办状态
     public int updateStudyPlanStatus(int id);
+
+    // ========== 学习行为分析功能 ==========
+
+    // 集合操作：获取用户学习活动数据（UNION）
+    public List<java.util.Map<String, Object>> selectUserLearningActivities(int userId);
+
+    // 除法查询：查找参与了所有三种学习活动的用户
+    public List<User> selectUsersParticipateAllActivities();
+
+    // 统计用户参与的学习活动类型数量
+    public java.util.Map<String, Object> selectUserActivityStats(int userId);
 }

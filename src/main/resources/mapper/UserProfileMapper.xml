@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wyu.studyonline.mapper.UserProfileMapper">
+
+    <!-- 根据用户ID查找用户扩展信息 -->
+    <select id="selectUserProfileByUserId" resultType="UserProfile">
+        select * from user_profile where user_id = ${userId}
+    </select>
+
+    <!-- 添加用户扩展信息 -->
+    <insert id="addUserProfile" useGeneratedKeys="true" keyProperty="id">
+        insert into user_profile(user_id, birthday, school, major, hometown, signature, update_time)
+        values (#{userId}, #{birthday}, #{school}, #{major}, #{hometown}, #{signature}, #{updateTime})
+    </insert>
+
+    <!-- 更新用户扩展信息 -->
+    <update id="updateUserProfile">
+        update user_profile
+        set birthday = #{birthday},
+            school = #{school},
+            major = #{major},
+            hometown = #{hometown},
+            signature = #{signature},
+            update_time = #{updateTime}
+        where user_id = #{userId}
+    </update>
+
+    <!-- 删除用户扩展信息 -->
+    <delete id="deleteUserProfile">
+        delete from user_profile where user_id = ${userId}
+    </delete>
+
+</mapper>

@@ -189,4 +189,21 @@ public class UserServiceImpl implements UserService {
     public int updateStudyPlanStatus(int id) {
         return userMapper.updateStudyPlanStatus(id);
     }
+
+    // ========== 学习行为分析功能实现 ==========
+
+    @Override
+    public List<java.util.Map<String, Object>> selectUserLearningActivities(int userId) {
+        return userMapper.selectUserLearningActivities(userId);
+    }
+
+    @Override
+    public List<User> selectUsersParticipateAllActivities() {
+        return userMapper.selectUsersParticipateAllActivities();
+    }
+
+    @Override
+    public java.util.Map<String, Object> selectUserActivityStats(int userId) {
+        return userMapper.selectUserActivityStats(userId);
+    }
 }

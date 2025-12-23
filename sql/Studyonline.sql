@@ -326,6 +326,26 @@ LOCK TABLES `like_record` WRITE;
 UNLOCK TABLES;
 
 --
+-- Table structure for table `user_profile`
+--
+
+DROP TABLE IF EXISTS `user_profile`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `user_profile` (
+                        `id` int NOT NULL AUTO_INCREMENT,
+                        `user_id` int NOT NULL UNIQUE,
+                        `birthday` date DEFAULT NULL,
+                        `school` varchar(100) DEFAULT NULL,
+                        `major` varchar(100) DEFAULT NULL,
+                        `hometown` varchar(100) DEFAULT NULL,
+                        `signature` varchar(255) DEFAULT NULL,
+                        `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                        PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
 -- Table structure for table `user`
 --
 
@@ -373,5 +393,125 @@ UNLOCK TABLES;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
+
+--
+-- Add explicit foreign key constraints
+--
+
+-- Enable foreign key checks
+SET FOREIGN_KEY_CHECKS = 1;
+
+-- Add foreign key constraints for comment table
+ALTER TABLE `comment` 
+ADD CONSTRAINT `fk_comment_user` 
+FOREIGN KEY (`userId`) REFERENCES `user`(`id`) 
+ON DELETE CASCADE ON UPDATE CASCADE;
+
+ALTER TABLE `comment` 
+ADD CONSTRAINT `fk_comment_study_status` 
+FOREIGN KEY (`studyStatusId`) REFERENCES `study_status`(`id`) 
+ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- Add foreign key constraints for everyday_status table
+ALTER TABLE `everyday_status` 
+ADD CONSTRAINT `fk_everyday_status_user` 
+FOREIGN KEY (`userId`) REFERENCES `user`(`id`) 
+ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- Add foreign key constraints for exam_time table
+ALTER TABLE `exam_time` 
+ADD CONSTRAINT `fk_exam_time_user` 
+FOREIGN KEY (`userId`) REFERENCES `user`(`id`) 
+ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- Add foreign key constraints for notice table
+ALTER TABLE `notice` 
+ADD CONSTRAINT `fk_notice_admin` 
+FOREIGN KEY (`adminId`) REFERENCES `admin`(`id`) 
+ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- Add foreign key constraints for report table
+ALTER TABLE `report` 
+ADD CONSTRAINT `fk_report_user` 
+FOREIGN KEY (`userId`) REFERENCES `user`(`id`) 
+ON DELETE CASCADE ON UPDATE CASCADE;
+
+ALTER TABLE `report` 
+ADD CONSTRAINT `fk_report_be_reported` 
+FOREIGN KEY (`beReportedId`) REFERENCES `user`(`id`) 
+ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- Add foreign key constraints for study_plan table
+ALTER TABLE `study_plan` 
+ADD CONSTRAINT `fk_study_plan_user` 
+FOREIGN KEY (`userId`) REFERENCES `user`(`id`) 
+ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- Add foreign key constraints for study_room table
+ALTER TABLE `study_room` 
+ADD CONSTRAINT `fk_study_room_category` 
+FOREIGN KEY (`categoryId`) REFERENCES `category`(`id`) 
+ON DELETE CASCADE ON UPDATE CASCADE;
+
+ALTER TABLE `study_room` 
+ADD CONSTRAINT `fk_study_room_user` 
+FOREIGN KEY (`userId`) REFERENCES `user`(`id`) 
+ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- Add foreign key constraints for study_status table
+ALTER TABLE `study_status` 
+ADD CONSTRAINT `fk_study_status_user` 
+FOREIGN KEY (`userId`) REFERENCES `user`(`id`) 
+ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- Add foreign key constraints for like_record table
+ALTER TABLE `like_record` 
+ADD CONSTRAINT `fk_like_record_user` 
+FOREIGN KEY (`userId`) REFERENCES `user`(`id`) 
+ON DELETE CASCADE ON UPDATE CASCADE;
+
+ALTER TABLE `like_record` 
+ADD CONSTRAINT `fk_like_record_study_status` 
+FOREIGN KEY (`studyStatusId`) REFERENCES `study_status`(`id`) 
+ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- Add foreign key constraints for user_profile table
+ALTER TABLE `user_profile` 
+ADD CONSTRAINT `fk_user_profile_user` 
+FOREIGN KEY (`user_id`) REFERENCES `user`(`id`) 
+ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Add performance indexes for frequently queried columns
+--
+
+-- Indexes for study_status table
+CREATE INDEX `idx_study_status_user_id` ON `study_status`(`userId`);
+CREATE INDEX `idx_study_status_create_time` ON `study_status`(`createTime`);
+
+-- Indexes for user table
+CREATE INDEX `idx_user_cellphone` ON `user`(`cellPhone`);
+CREATE INDEX `idx_user_create_time` ON `user`(`createTime`);
+
+-- Indexes for comment table
+CREATE INDEX `idx_comment_study_status_id` ON `comment`(`studyStatusId`);
+CREATE INDEX `idx_comment_create_time` ON `comment`(`createTime`);
+
+-- Indexes for everyday_status table
+CREATE INDEX `idx_everyday_status_user_id` ON `everyday_status`(`userId`);
+CREATE INDEX `idx_everyday_status_update_time` ON `everyday_status`(`updateTime`);
+
+-- Indexes for exam_time table
+CREATE INDEX `idx_exam_time_user_id` ON `exam_time`(`userId`);
+CREATE INDEX `idx_exam_time_exam_time` ON `exam_time`(`examTime`);
+
+-- Indexes for study_plan table
+CREATE INDEX `idx_study_plan_user_id` ON `study_plan`(`userId`);
+CREATE INDEX `idx_study_plan_status` ON `study_plan`(`status`);
+
+-- Indexes for study_room table
+CREATE INDEX `idx_study_room_category_id` ON `study_room`(`categoryId`);
+CREATE INDEX `idx_study_room_user_id` ON `study_room`(`userId`);
+CREATE INDEX `idx_study_room_audit_status` ON `study_room`(`auditStatus`);
 
 -- Dump completed on 2025-12-21 21:00:47

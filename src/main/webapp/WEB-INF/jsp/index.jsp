@@ -193,6 +193,14 @@
                                               class="site-demo-active"
                                               data-type="tabAdd"
                 ><i class="layui-icon layui-icon-friends" style="font-size: 18px; color: #FFFFFF;"></i>&nbsp;&nbsp;个人中心</a></li>
+                <li class="layui-nav-item"><a href="javascript:;"
+                                              data-url="user/learningAnalysisPage"
+                                              data-id="learningAnalysisPage"
+                                              data-title="<i class='layui-icon layui-icon-chart'
+                                            style='font-size: 20px; color: #1E9FFF;'></i>&nbsp;&nbsp;学习分析"
+                                              class="site-demo-active"
+                                              data-type="tabAdd"
+                ><i class="layui-icon layui-icon-chart" style="font-size: 18px; color: #FFFFFF;"></i>&nbsp;&nbsp;学习分析</a></li>
             </ul>
         </div>
     </div>

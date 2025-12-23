@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.qiniu.util.Auth;
 import com.wyu.studyonline.config.QiNiuYunConfig;
 import com.wyu.studyonline.pojo.*;
+import com.wyu.studyonline.service.UserProfileService;
 import com.wyu.studyonline.service.UserService;
 import com.wyu.studyonline.service.impl.UserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +33,9 @@ import java.util.concurrent.TimeUnit;
 public class UserController {
     @Autowired
     UserServiceImpl userService;
+
+    @Autowired
+    UserProfileService userProfileService;
 
     @Autowired
     QiNiuYunConfig qiNiuYunConfig;
@@ -480,6 +484,98 @@ public class UserController {
         return "authCodeError";
     }
 
+    // 用户扩展信息管理页面
+    @RequestMapping("/userProfilePage")
+    public String userProfilePage(Model model, HttpSession session){
+        User user = (User) session.getAttribute("user");
+        if(user != null){
+            UserProfile userProfile = userProfileService.getUserProfileByUserId(user.getId());
+            model.addAttribute("userProfile", userProfile);
+        }
+        return "user/userProfilePage";
+    }
 
+    // 获取用户扩展信息
+    @ResponseBody
+    @RequestMapping("/getUserProfile")
+    public Result getUserProfile(HttpSession session){
+        User user = (User) session.getAttribute("user");
+        if(user == null){
+            return Result.failure("用户未登录");
+        }
+        UserProfile userProfile = userProfileService.getUserProfileByUserId(user.getId());
+        return Result.success(userProfile);
+    }
+
+    // 保存用户扩展信息
+    @ResponseBody
+    @RequestMapping("/saveUserProfile")
+    public Result saveUserProfile(UserProfile userProfile, HttpSession session){
+        User user = (User) session.getAttribute("user");
+        if(user == null){
+            return Result.failure("用户未登录");
+        }
+        userProfile.setUserId(user.getId());
+        int result = userProfileService.saveOrUpdateUserProfile(userProfile);
+        if(result > 0){
+            return Result.success("保存成功");
+        }
+        return Result.failure("保存失败");
+    }
+
+    // ========== 学习行为分析功能 ==========
+
+    // 学习行为分析页面
+    @RequestMapping("/learningAnalysisPage")
+    public String learningAnalysisPage(){
+        return "user/learningAnalysisPage";
+    }
+
+    // 获取用户学习活动数据（集合操作：UNION）
+    @ResponseBody
+    @RequestMapping("/getUserLearningActivities")
+    public Result getUserLearningActivities(HttpSession session){
+        User user = (User) session.getAttribute("user");
+        if(user == null){
+            return Result.failure("用户未登录");
+        }
+        try {
+            List<Map<String, Object>> activities = userService.selectUserLearningActivities(user.getId());
+            return Result.success(activities);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return Result.failure("获取学习活动数据失败");
+        }
+    }
+
+    // 获取用户参与度统计（除法查询）
+    @ResponseBody
+    @RequestMapping("/getUserActivityStats")
+    public Result getUserActivityStats(HttpSession session){
+        User user = (User) session.getAttribute("user");
+        if(user == null){
+            return Result.failure("用户未登录");
+        }
+        try {
+            Map<String, Object> stats = userService.selectUserActivityStats(user.getId());
+            return Result.success(stats);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return Result.failure("获取参与度统计失败");
+        }
+    }
+
+    // 获取全参与用户列表（除法查询）
+    @ResponseBody
+    @RequestMapping("/getFullParticipationUsers")
+    public Result getFullParticipationUsers(){
+        try {
+            List<User> users = userService.selectUsersParticipateAllActivities();
+            return Result.success(users);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return Result.failure("获取全参与用户列表失败");
+        }
+    }
 
 }

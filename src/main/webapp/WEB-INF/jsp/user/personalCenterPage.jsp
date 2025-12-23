@@ -97,6 +97,14 @@
         line-height: 23px;
     }
 
+    .update-profile{
+        position: absolute;
+        height: 23px;
+        margin-left: 440px !important;
+        border-radius: 5px;
+        line-height: 23px;
+    }
+
     .every-day{
         margin-left: 140px;
         margin-top: -25px;
@@ -231,6 +239,7 @@
             <button class="layui-btn layui-btn-radius layui-btn-primary layui-btn-sm update-information" id="updateInformation">修改信息</button>
             <button class="layui-btn layui-btn-radius layui-btn-primary layui-btn-sm update-password" id="updatePassword">修改密码</button>
             <button class="layui-btn layui-btn-radius layui-btn-primary layui-btn-sm update-phone" id="updatePhone">更换手机</button>
+            <button class="layui-btn layui-btn-radius layui-btn-primary layui-btn-sm update-profile" id="updateProfile">完善信息</button>
         </div>
     </div>
 </div>
@@ -393,6 +402,22 @@ $(function () {
             area: ['700px', '450px'],
             offset: '0px',
             content: 'updatePhonePage'
+        });
+    })
+
+    $("#updateProfile").click(function () {
+        //iframe 层
+        layer.open({
+            type: 2,
+            title: '完善个人信息',
+            shadeClose: true,
+            shade: false,
+            move: false,
+            scrollbar: true, // 启用滚动条
+            //maxmin: true, //开启最大化最小化按钮
+            area: ['700px', '850px'], // 大幅增加高度
+            offset: '0px',
+            content: 'userProfilePage'
         });
     })
 

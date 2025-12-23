@@ -175,4 +175,57 @@
     <update id="updateStudyPlanStatus">
         update study_plan set status = 1 where id = #{id};
     </update>
+
+    <!-- ========== 学习行为分析查询 ========== -->
+    
+    <!-- 集合操作：UNION - 合并用户最近30天的所有学习活动 -->
+    <!-- public List<Map<String, Object>> selectUserLearningActivities(@Param("userId") int userId); -->
+    <select id="selectUserLearningActivities" resultType="java.util.Map">
+        SELECT 'study_status' as activity_type, id, content as activity_content, createTime 
+        FROM study_status 
+        WHERE userId = #{userId} AND createTime >= DATE_SUB(NOW(), INTERVAL 30 DAY)
+        UNION
+        SELECT 'exam_time' as activity_type, id, examName as activity_content, examTime as createTime 
+        FROM exam_time 
+        WHERE userId = #{userId} AND examTime >= DATE_SUB(NOW(), INTERVAL 30 DAY)
+        UNION
+        SELECT 'study_plan' as activity_type, id, content as activity_content, createTime 
+        FROM study_plan 
+        WHERE userId = #{userId} AND createTime >= DATE_SUB(NOW(), INTERVAL 30 DAY)
+        ORDER BY createTime DESC
+    </select>
+
+    <!-- 除法查询：查找参与了所有三种学习活动的用户 -->
+    <!-- public List<User> selectUsersParticipateAllActivities(); -->
+    <select id="selectUsersParticipateAllActivities" resultType="User">
+        SELECT u.* 
+        FROM user u
+        WHERE NOT EXISTS (
+            SELECT activity_type 
+            FROM (
+                SELECT 'study_status' as activity_type
+                UNION SELECT 'exam_time' 
+                UNION SELECT 'study_plan'
+            ) activity_types
+            WHERE NOT EXISTS (
+                SELECT 1 
+                FROM (
+                    SELECT 'study_status' as activity_type, userId FROM study_status WHERE userId = u.id
+                    UNION SELECT 'exam_time', userId FROM exam_time WHERE userId = u.id  
+                    UNION SELECT 'study_plan', userId FROM study_plan WHERE userId = u.id
+                ) user_activities
+                WHERE user_activities.activity_type = activity_types.activity_type
+            )
+        )
+    </select>
+
+    <!-- 统计用户参与的学习活动类型数量 -->
+    <!-- public Map<String, Object> selectUserActivityStats(@Param("userId") int userId); -->
+    <select id="selectUserActivityStats" resultType="java.util.Map">
+        SELECT 
+            (SELECT COUNT(*) FROM study_status WHERE userId = #{userId} LIMIT 1) > 0 as has_status,
+            (SELECT COUNT(*) FROM exam_time WHERE userId = #{userId} LIMIT 1) > 0 as has_exam,
+            (SELECT COUNT(*) FROM study_plan WHERE userId = #{userId} LIMIT 1) > 0 as has_plan,
+            (SELECT COUNT(*) FROM study_room WHERE userId = #{userId} LIMIT 1) > 0 as has_room
+    </select>
 </mapper>
